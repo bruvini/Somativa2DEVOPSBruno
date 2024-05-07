@@ -3,10 +3,10 @@ name: Pipeline de CI/CD para Atividade de DevOps
 on:
   push:
     branches:
-      - main  # Executa o workflow em pushes para o branch principal
+      - master  # Executa o workflow em pushes para o branch principal
   pull_request:
     branches:
-      - main  # Executa o workflow em pull requests para o branch principal
+      - master  # Executa o workflow em pull requests para o branch principal
 
 jobs:
   build-and-test:
