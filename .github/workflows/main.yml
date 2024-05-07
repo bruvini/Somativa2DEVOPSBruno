@@ -33,15 +33,9 @@ jobs:
       run: echo "Deploy realizado com sucesso! Acesse a aplicação em https://somativa2-devops-bruno.vercel.app/ via integração com Vercel"
       # Mensagem de confirmação de deploy no Vercel
 
-  notify:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'  # Só executa se o trigger for um pull request
-    
-    steps:
-    - name: Notificar Discord sobre Pull Request
+    - name: Notificar Discord
       run: |
         curl -X POST -H "Content-Type: application/json" \
-             -d "{\"content\": \"Novo Pull Request: ${{ github.event.pull_request.html_url }}\"}" \
+             -d "{\"content\": \"Ação realizada no GitHub: ${{ github.event_name }}, veja mais em: ${{ github.event.pull_request.html_url || 'https://somativa2-devops-bruno.vercel.app/' }}\"}" \
              ${{ secrets.DISCORD_WEBHOOK_URL }}
-      # Usa o webhook do Discord para enviar uma notificação sobre um novo pull request
+      # Usa o webhook do Discord para enviar uma notificação sobre a ação realizada
