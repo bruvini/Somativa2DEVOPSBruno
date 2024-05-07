@@ -9,9 +9,8 @@ on:
       - master  # Executa o workflow em pull requests para o branch principal
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest  # Define que o job será executado em um ambiente Ubuntu
-
     steps:
     - name: Verificar Código
       uses: actions/checkout@v2  # Busca o código do repositório
@@ -31,6 +30,10 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/app-mensagens-pucpr:latest
       # Envia a imagem Docker para o Docker Hub
 
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: Executar Ferramenta SAST
       uses: SonarSource/sonarcloud-github-action@master
       with:
@@ -41,6 +44,10 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa o token do SonarCloud como variável de ambiente
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token do GitHub como variável de ambiente
 
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
     - name: Deploy no Vercel
       run: echo "Deploy realizado com sucesso! Acesse a aplicação em https://somativa2-devops-bruno.vercel.app/ via integração com Vercel"
       # Mensagem de confirmação de deploy no Vercel
