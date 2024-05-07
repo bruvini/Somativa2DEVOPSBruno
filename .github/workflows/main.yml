@@ -42,6 +42,6 @@ jobs:
     - name: Notificar Discord sobre Pull Request
       run: |
         curl -X POST -H "Content-Type: application/json" \
-             -d '{"content": "Novo Pull Request: ${{ github.event.pull_request.html_url }}"}' \
+             -d "{\"content\": \"Novo Pull Request: ${{ github.event.pull_request.html_url }}\"}" \
              ${{ secrets.DISCORD_WEBHOOK_URL }}
       # Usa o webhook do Discord para enviar uma notificação sobre um novo pull request
