@@ -1,0 +1,43 @@
+name: Pipeline de CI/CD para Atividade de DevOps
+
+on:
+  push:
+    branches:
+      - main  # Executa o workflow em pushes para o branch principal
+  pull_request:
+    branches:
+      - main  # Executa o workflow em pull requests para o branch principal
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest  # Define que o job será executado em um ambiente Ubuntu
+
+    steps:
+    - name: Verificar Código
+      uses: actions/checkout@v2  # Busca o código do repositório
+
+    - name: Construir Imagem Docker
+      run: docker build -t app-mensagens-pucpr .  # Constrói a imagem Docker da aplicação
+
+    - name: Executar Ferramenta SAST
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa o token do SonarCloud como variável de ambiente
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token do GitHub como variável de ambiente
+
+    - name: Deploy no Vercel
+      run: echo "Fazendo deploy em https://somativa2-devops-bruno.vercel.app/ via integração com Vercel"
+      # Acima apenas registra a mensagem, o deploy é feito automaticamente pelo Vercel
+
+  notify:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'  # Só executa se o trigger for um pull request
+    
+    steps:
+    - name: Notificar Discord sobre Pull Request
+      run: |
+        curl -X POST -H "Content-Type: application/json" \
+             -d '{"content": "Novo Pull Request: ${{ github.event.pull_request.html_url }}"}' \
+             ${{ secrets.DISCORD_WEBHOOK_URL }}
+      # Usa o webhook do Discord para enviar uma notificação sobre um novo pull request
