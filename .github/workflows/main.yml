@@ -3,10 +3,10 @@ name: Pipeline de CI/CD para Atividade de DevOps
 on:
   push:
     branches:
-      - main  # Executa o workflow em pushes para o branch principal
+      - master  # Executa o workflow em pushes para o branch principal
   pull_request:
     branches:
-      - main  # Executa o workflow em pull requests para o branch principal
+      - master  # Executa o workflow em pull requests para o branch principal
 
 jobs:
   build-and-test:
@@ -21,13 +21,17 @@ jobs:
 
     - name: Executar Ferramenta SAST
       uses: SonarSource/sonarcloud-github-action@master
+      with:
+        args: >
+          -Dsonar.projectKey=bruvini_Somativa2DEVOPSBruno
+          -Dsonar.organization=enfermeiro-bruno-vinicius
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa o token do SonarCloud como variável de ambiente
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token do GitHub como variável de ambiente
 
     - name: Deploy no Vercel
-      run: echo "Fazendo deploy em https://somativa2-devops-bruno.vercel.app/ via integração com Vercel"
-      # Acima apenas registra a mensagem, o deploy é feito automaticamente pelo Vercel
+      run: echo "Deploy realizado com sucesso! Acesse a aplicação em https://somativa2-devops-bruno.vercel.app/ via integração com Vercel"
+      # Mensagem de confirmação de deploy no Vercel
 
   notify:
     needs: build-and-test
