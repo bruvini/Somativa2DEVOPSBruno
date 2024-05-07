@@ -24,7 +24,7 @@ jobs:
       with:
         args: >
           -Dsonar.projectKey=bruvini_Somativa2DEVOPSBruno
-          -Dsonar.organization=enfermeiro-bruno-vinicius
+          -Dsonar.organization=bruvini
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Usa o token do SonarCloud como variável de ambiente
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Usa o token do GitHub como variável de ambiente
